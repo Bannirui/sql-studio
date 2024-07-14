@@ -121,4 +121,4 @@ compile_commands.json
 *.cflags
 
 [Bb][Uu][Ii][Ll][Dd]
-
+.idea
