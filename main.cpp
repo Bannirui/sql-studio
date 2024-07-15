@@ -6,6 +6,7 @@
 
 #include "MySQLClient.h"
 #include "packet.h"
+#include "payload.h"
 
 int main(int argc, char* argv[])
 {
@@ -26,7 +27,8 @@ int main(int argc, char* argv[])
 	{
 		return -1;
 	}
-	HandshakeV10Packet handshake_packet;
+	HandshakeV10Payload handshakeV10Payload;
+	HandshakeV10Packet handshake_packet(handshakeV10Payload);
 	if (!client.receive_handshake_packet(handshake_packet))
 	{
 		return -1;
