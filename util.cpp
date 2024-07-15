@@ -3,8 +3,6 @@
 //
 #include "util.h"
 
-#include <iostream>
-
 uint32_t ParserUtil::read_u24_from_byte_arr(const std::vector<uint8_t>& buf, size_t& offset)
 {
 	uint32_t val = buf[offset] | (buf[offset + 1] << 8) | (buf[offset + 2] << 16);
