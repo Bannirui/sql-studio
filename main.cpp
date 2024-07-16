@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 #include "tlogindialog.h"
 
-#include "MySQLClient.h"
+#include "mysqlclient.h"
 #include "packet.h"
 #include "payload.h"
 
@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
 	{
 		return -1;
 	}
-	HandshakeV10Payload handshakeV10Payload;
-	HandshakeV10Packet handshake_packet(handshakeV10Payload);
+	HandshakeV10Payload handshake_v10_payload;
+	MySQLPacket handshake_packet(&handshake_v10_payload);
 	if (!client.receive_handshake_packet(handshake_packet))
 	{
 		return -1;

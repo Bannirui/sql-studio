@@ -10,7 +10,7 @@
 
 class Payload
 {
- protected:
+ public:
 	virtual void parse(const std::vector<uint8_t>& buffer) = 0;
 	virtual void print() = 0;
 };
