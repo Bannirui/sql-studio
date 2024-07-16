@@ -14,17 +14,9 @@ class MySQLPacket
  public:
 	uint32_t payload_length;
 	uint32_t sequence_id;
+	Payload* payload;
  public:
-	virtual void parse(const std::vector<uint8_t>& buffer) = 0;
-	virtual void print() = 0;
-};
-class HandshakeV10Payload;
-class HandshakeV10Packet : public MySQLPacket
-{
- public:
-	HandshakeV10Payload& payload;
- public:
-	HandshakeV10Packet(HandshakeV10Payload& payload);
+	MySQLPacket(Payload* payload);
  public:
 	void parse(const std::vector<uint8_t>& buffer);
 	void print();

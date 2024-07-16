@@ -9,8 +9,7 @@
 #include <vector>
 #include <cstdint>
 
-class HandshakeV10Packet;
-
+class MySQLPacket;
 class MySQLClient
 {
  private:
@@ -30,7 +29,7 @@ class MySQLClient
 	 * @return -1标识连接失败
 	 */
 	int connect_to_server();
-	bool receive_handshake_packet(HandshakeV10Packet& packet);
+	bool receive_handshake_packet(MySQLPacket& packet);
 	bool send_handshake_response();
 
  private:

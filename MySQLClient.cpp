@@ -50,7 +50,7 @@ int MySQLClient::connect_to_server()
 	return true;
 }
 
-bool MySQLClient::receive_handshake_packet(HandshakeV10Packet& packet)
+bool MySQLClient::receive_handshake_packet(MySQLPacket& packet)
 {
 	std::vector<uint8_t> buf(ARR_LEN);
 	ssize_t bytes_received = recv(this->sock, buf.data(), buf.size(), 0);
@@ -60,6 +60,7 @@ bool MySQLClient::receive_handshake_packet(HandshakeV10Packet& packet)
 		return false;
 	}
 	buf.resize(bytes_received);
+#if(DEBUG)
 	// 握手包的原始数据
 	std::cout << "raw handshake packet data:\n";
 	for (const auto& byte : buf)
@@ -67,6 +68,7 @@ bool MySQLClient::receive_handshake_packet(HandshakeV10Packet& packet)
 		std::cout << std::hex << static_cast<int>(byte) << " ";
 	}
 	std::cout << std::dec << std::endl;
+#endif
 	// 解析握手包
 	packet.parse(buf);
 	return true;
