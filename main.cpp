@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 #include "tlogindialog.h"
 
-#include "MySQLClient.h"
+#include "mysqlclient.h"
 #include "packet.h"
 #include "payload.h"
 

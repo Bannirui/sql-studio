@@ -2,12 +2,12 @@
 // Created by dingrui on 2024/7/13.
 //
 
+#include <cstring>
+#include <iostream>
+
 #include "packet.h"
 #include "util.h"
 #include "payload.h"
-
-#include <cstring>
-#include <iostream>
 
 MySQLPacket::MySQLPacket(Payload* payload)
 	: payload(payload)
