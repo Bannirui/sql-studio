@@ -60,7 +60,7 @@ bool MySQLClient::receive_handshake_packet(MySQLPacket& packet)
 		return false;
 	}
 	buf.resize(bytes_received);
-#if(DEBUG)
+#ifdef TEST_DEBUG
 	// 握手包的原始数据
 	std::cout << "raw handshake packet data:\n";
 	for (const auto& byte : buf)
@@ -72,4 +72,21 @@ bool MySQLClient::receive_handshake_packet(MySQLPacket& packet)
 	// 解析握手包
 	packet.parse(buf);
 	return true;
+}
+bool MySQLClient::send_handshake_response()
+{
+	std::vector<uint8_t> resp_data = this->create_handshake_response();
+#ifdef TEST_DEBUG
+	// 响应握手包的原始数据
+	std::cout << "raw handshake resp packet data:\n";
+	for (const auto& byte : resp_data)
+	{
+		std::cout << std::hex << static_cast<int>(byte) << " ";
+	}
+	std::cout << std::dec << std::endl;
+#endif
+}
+std::vector<uint8_t> MySQLClient::create_handshake_response()
+{
+
 }

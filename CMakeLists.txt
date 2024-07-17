@@ -8,7 +8,11 @@ if (APPLE)
     set(CMAKE_PREFIX_PATH "/Users/dingrui/Qt/6.7.0/macos")
 endif ()
 
-option(DEBUG "调试日志开关" off)
+option(TEST_DEBUG "调试日志开关" OFF)
+
+if (TEST_DEBUG)
+    add_definitions(-DTEST_DEBUG)
+endif ()
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
