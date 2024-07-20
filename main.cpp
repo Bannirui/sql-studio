@@ -30,11 +30,13 @@ int main(int argc, char* argv[])
 	}
 	HandshakeV10Payload handshake_v10_payload;
 	MySQLPacket handshake_packet(&handshake_v10_payload);
-	if (!client.receive_handshake_packet(handshake_packet))
+	if (client.recv_packet(handshake_packet, [&client](void* v) -> void
+	{ client.server_capabilities = *(uint32_t*)v; })==PacketType::fail)
 	{
 		std::cerr << "接收服务端初始握手包失败\n";
 		return -1;
 	}
+	std::cout << "接收服务端初始握手包成功\n";
 #ifdef TEST_DEBUG
 	handshake_packet.print();
 #endif
@@ -43,5 +45,6 @@ int main(int argc, char* argv[])
 		std::cerr << "客户端回复握手包失败\n";
 		return -1;
 	}
+	std::cout << "客户端回复握手包成功\n";
 	return 0;
 }

@@ -12,14 +12,14 @@ class Payload
 {
  public:
 	virtual void print();
-	virtual void read(const std::vector<uint8_t>& buffer);
+	virtual void read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn);
 	virtual std::vector<uint8_t> write();
 };
 // 客户端接收服务端
 class InPayload : public Payload
 {
 	// 字节数组反序列化
-	void read(const std::vector<uint8_t>& buffer) override = 0;
+	void read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn) override = 0;
 };
 // 客户端向服务端发送
 class OutPayload : public Payload
@@ -40,7 +40,7 @@ class HandshakeV9Payload : public HandshakePayload
 	std::string scramble;
  public:
 	void print() override;
-	void read(const std::vector<uint8_t>& buffer) override;
+	void read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn) override;
 };
 class HandshakeV10Payload : public HandshakePayload
 {
@@ -59,7 +59,7 @@ class HandshakeV10Payload : public HandshakePayload
 	std::string auth_plugin_name;
  public:
 	void print() override;
-	void read(const std::vector<uint8_t>& buffer) override;
+	void read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn) override;
 };
 class AuthResponse : public OutPayload
 {
@@ -131,5 +131,33 @@ class HandshakeResponse41 : public AuthResponse
 	std::vector<uint8_t> write() override;
 	std::vector<uint8_t> generate_auth_response(const std::string& password,
 		const std::vector<unsigned char>& nonce) override;
+};
+class OkPayload : public InPayload
+{
+ public:
+	// int<1>	header	0x00 or 0xFE the OK packet header
+	uint8_t header;
+	// int<lenenc>	affected_rows	affected rows
+	// int<lenenc>	last_insert_id	last insert-id
+	// int<2>	status_flags	SERVER_STATUS_flags_enum
+	// int<2>	warnings	number of warnings
+	// string<lenenc>	info	human readable status information
+	// string<lenenc>	session state info	Session State Information
+ public:
+	void print() override;
+	void read(const std::vector<uint8_t> &buffer, const std::function<void (void *)> &fn) override;
+};
+class ErrPayload : public InPayload
+{
+ public:
+	// int<1>	header	0xFF ERR packet header
+	uint8_t header;
+	// int<2>	error_code	error-code
+	// string[1]	sql_state_marker	# marker of the SQL state
+	// string[5]	sql_state	SQL state
+	// string<EOF>	error_message	human readable error message
+ public:
+	void print() override;
+	void read(const std::vector<uint8_t> &buffer, const std::function<void (void *)> &fn) override;
 };
 #endif //SQL_STUDIO__PAYLOAD_H_

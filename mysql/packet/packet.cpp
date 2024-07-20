@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <functional>
 
 #include "../include/packet.h"
 #include "../include/util.h"
@@ -18,12 +19,12 @@ void MySQLPacket::print()
 	std::cout << "sequence id: " << static_cast<int>(this->sequence_id) << "\n";
 	this->payload->print();
 }
-void MySQLPacket::read(const std::vector<uint8_t>& buffer)
+void MySQLPacket::read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn)
 {
 	size_t i = 0;
 	this->payload_length = ParserUtil::read_u24_from_byte_arr(buffer, i);
 	this->sequence_id = ParserUtil::read_int_from_byte_arr<uint8_t>(buffer, i);
-	this->payload->read(buffer);
+	this->payload->read(buffer, fn);
 }
 std::vector<uint8_t> MySQLPacket::write()
 {

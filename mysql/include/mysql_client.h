@@ -8,11 +8,12 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include "packet.h"
 
 class MySQLPacket;
 class MySQLClient
 {
- private:
+ public:
 	std::string host;
 	uint16_t port;
 	std::string username;
@@ -25,7 +26,7 @@ class MySQLClient
 	 * 服务端capabilities.
 	 * 服务端向客户端发送初始握手包的时候会发送过来
 	 */
-	int32_t server_capabilities;
+	uint32_t server_capabilities;
 
  public:
 	MySQLClient(const std::string& host, uint16_t port, const std::string& username, const std::string& pwd, const std::string& db_name);
@@ -37,14 +38,20 @@ class MySQLClient
 	 */
 	int connect_to_server();
 	/**
-	 * tcp连接建立之后 服务端会向客户端发送初始握手包.
-	 * @param packet 根据握手包协议解析字节数据
+	 * 客户端接收服务端字节数据 解析成数据包.
+	 * <ul>
+	 *   <li>tcp连接建立之后 服务端会向客户端发送初始握手包</li>
+	 * </ul>
+	 * @param packet 要解析成的数据包
+	 * @param fn 回调函数 比如需要获取初始握手包中的server_capabilities
 	 */
-	bool receive_handshake_packet(MySQLPacket& packet);
+	int recv_packet(MySQLPacket& packet, std::function<void (void*)>const &fn);
 	/**
 	 * 客户端收到服务端初始握手包之后回复握手包.
 	 */
 	bool send_handshake_response();
+ private:
+	bool send_packet(MySQLPacket& packet);
 };
 
 #endif //SQL_STUDIO__MYSQL_CLIENT_H_
