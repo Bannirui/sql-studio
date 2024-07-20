@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <functional>
+#include <iomanip>
 
 #include "include/mysql_client.h"
 #include "include/packet.h"
@@ -72,14 +73,16 @@ int MySQLClient::recv_packet(MySQLPacket& packet, std::function<void(void*)> con
 	std::cout << "服务端发送的原始数据: ";
 	for (const auto& byte : buf)
 	{
-		std::cout << std::hex << static_cast<int>(byte) << " ";
+		std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<uint32_t>(byte) << " ";
 	}
 	std::cout << std::dec << std::endl;
 #endif
 	// 解析服务端数据
 	packet.read(buf, fn);
 #ifdef TEST_DEBUG
-	std::cout << "服务端capabilities值为0x" << std::hex << this->server_capabilities << std::dec << std::endl;
+	std::cout << "服务端capabilities值为0x" << std::hex << std::setw(8) << std::setfill('0')
+			  << this->server_capabilities << std::endl;
+	std::cout << std::dec;
 #endif
 	return true;
 }
@@ -129,10 +132,10 @@ bool MySQLClient::send_packet(MySQLPacket& packet)
 {
 	std::vector<uint8_t> packet_data = packet.write();
 #ifdef TEST_DEBUG
-	std::cout<<"客户端发送的原始数据为: "<<std::hex;
+	std::cout << "客户端发送的原始数据为: " << std::hex;
 	for (const auto& byte : packet_data)
 	{
-		std::cout << std::hex << static_cast<int>(byte) << " ";
+		std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<uint32_t>(byte) << " ";
 	}
 	std::cout << std::dec << std::endl;
 #endif
