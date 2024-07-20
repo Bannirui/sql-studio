@@ -7,10 +7,10 @@
 #include <unistd.h>
 #include <iostream>
 
-#include "mysql_client.h"
-#include "packet.h"
-#include "mysql_macros.h"
-#include "payload.h"
+#include "include/mysql_client.h"
+#include "include/packet.h"
+#include "include/mysql_macros.h"
+#include "include/payload.h"
 
 #define ARR_LEN 1024
 

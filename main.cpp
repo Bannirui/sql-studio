@@ -4,9 +4,9 @@
 #include "mainwindow.h"
 #include "tlogindialog.h"
 
-#include "mysql_client.h"
-#include "packet.h"
-#include "payload.h"
+#include "mysql/include/mysql_client.h"
+#include "mysql/include/packet.h"
+#include "mysql/include/payload.h"
 
 int main(int argc, char* argv[])
 {

@@ -2,9 +2,9 @@
 // Created by dingrui on 2024/7/14.
 //
 
-#include "payload.h"
-#include "util.h"
-#include "mysql_macros.h"
+#include "../include/payload.h"
+#include "../include/util.h"
+#include "../include/mysql_macros.h"
 
 #include <iostream>
 void Payload::print()

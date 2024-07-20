@@ -4,9 +4,9 @@
 
 #include <iostream>
 
-#include "packet.h"
-#include "util.h"
-#include "payload.h"
+#include "../include/packet.h"
+#include "../include/util.h"
+#include "../include/payload.h"
 
 MySQLPacket::MySQLPacket(Payload* payload)
 	: payload(payload)
