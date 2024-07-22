@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <functional>
 
 #include "../include/payload.h"
 #include "../include/util.h"
@@ -12,7 +11,7 @@
 void Payload::print()
 {
 }
-void Payload::read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn)
+void Payload::read(const std::vector<uint8_t>& buffer)
 {
 
 }
@@ -24,7 +23,7 @@ void HandshakeV9Payload::print()
 {
 	// TODO: 2024/7/20
 }
-void HandshakeV9Payload::read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn)
+void HandshakeV9Payload::read(const std::vector<uint8_t>& buffer)
 {
 	// TODO: 2024/7/20
 }
@@ -40,7 +39,7 @@ void HandshakeV10Payload::print()
 	std::cout << "auth_plugin_data_len: " << static_cast<uint32_t>(this->auth_plugin_data_len) << "\n";
 	std::cout << "auth_plugin_name: " << this->auth_plugin_name << "\n";
 }
-void HandshakeV10Payload::read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn)
+void HandshakeV10Payload::read(const std::vector<uint8_t>& buffer)
 {
 	size_t i = 4;
 	this->protocol_version = ParserUtil::read_int_from_byte_arr<uint8_t>(buffer, i);
@@ -53,10 +52,6 @@ void HandshakeV10Payload::read(const std::vector<uint8_t>& buffer, std::function
 	this->status_flags = ParserUtil::read_int_from_byte_arr<uint16_t>(buffer, i);
 	this->capability_flags_2 = ParserUtil::read_int_from_byte_arr<uint16_t>(buffer, i);
 	int capability_flags = (this->capability_flags_2 << 16) | this->capability_flags_1;
-	if (fn)
-	{
-		fn((void*)&capability_flags);
-	}
 	if (capability_flags & CLIENT_PLUGIN_AUTH)
 		this->auth_plugin_data_len = ParserUtil::read_int_from_byte_arr<uint8_t>(buffer, i);
 	else this->auth_plugin_data_len = 0;
@@ -152,13 +147,13 @@ void OkPayload::print()
 {
 
 }
-void OkPayload::read(const std::vector<uint8_t>& buffer, const std::function<void(void*)>& fn)
+void OkPayload::read(const std::vector<uint8_t>& buffer)
 {
 
 }
 void ErrPayload::print()
 {
 }
-void ErrPayload::read(const std::vector<uint8_t>& buffer, const std::function<void(void*)>& fn)
+void ErrPayload::read(const std::vector<uint8_t>& buffer)
 {
 }

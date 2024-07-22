@@ -10,48 +10,59 @@
 #include <cstdint>
 #include "packet.h"
 
+#define ARR_LEN 0x01<<10
+
+#define OK_PACKET_1 0x00
+#define OK_PACKET_2 0xfe
+#define ERR_PACKET 0xff
+#define HANDSHAKE_V9 0x09
+#define HANDSHAKE_V10 0x0a
+
 class MySQLPacket;
 class MySQLClient
 {
  public:
+	/**
+	 * @param host 域名
+	 * @param port 端口
+	 * @param username 用户名
+	 * @param pwd 密码
+	 * @param db_name 数据库
+	 */
+	MySQLClient(const std::string& host,
+		uint16_t port,
+		const std::string& username,
+		const std::string& pwd,
+		const std::string& db_name);
+	~MySQLClient();
+	/**
+	 * 登陆.
+	 */
+	bool connect_2_mysql_server();
+	void query();
+ private:
+	/**
+	 * 初始化tcp连接.
+	 * @return socket fd
+	 */
+	int init_tcp();
+	void handshake();
+	std::vector<uint8_t> receive_packet();
+	void print_packet(const std::vector<uint8_t>& packet);
+	void process_packet(const std::vector<uint8_t>& packet);
+	void process_ok_packet(const std::vector<uint8_t>& packet);
+	void process_error_packet(const std::vector<uint8_t>& packet);
+	void process_handshake_v9_packet(const std::vector<uint8_t>& packet);
+	void process_handshake_v10_packet(const std::vector<uint8_t>& packet);
+	bool send_packet(std::vector<uint8_t>& packet);
+ private:
 	std::string host;
 	uint16_t port;
 	std::string username;
 	std::string pwd;
-
 	std::string db_name;
-
-	int sock;
-	/**
-	 * 服务端capabilities.
-	 * 服务端向客户端发送初始握手包的时候会发送过来
-	 */
+	int sock_fd;
 	uint32_t server_capabilities;
-
- public:
-	MySQLClient(const std::string& host, uint16_t port, const std::string& username, const std::string& pwd, const std::string& db_name);
-	~MySQLClient();
- public:
-	/**
-	 * 建立tcp连接.
-	 * @return -1标识连接失败
-	 */
-	int connect_to_server();
-	/**
-	 * 客户端接收服务端字节数据 解析成数据包.
-	 * <ul>
-	 *   <li>tcp连接建立之后 服务端会向客户端发送初始握手包</li>
-	 * </ul>
-	 * @param packet 要解析成的数据包
-	 * @param fn 回调函数 比如需要获取初始握手包中的server_capabilities
-	 */
-	int recv_packet(MySQLPacket& packet, std::function<void (void*)>const &fn);
-	/**
-	 * 客户端收到服务端初始握手包之后回复握手包.
-	 */
-	bool send_handshake_response();
- private:
-	bool send_packet(MySQLPacket& packet);
 };
 
 #endif //SQL_STUDIO__MYSQL_CLIENT_H_

@@ -8,10 +8,6 @@
 #include <vector>
 #include <cstdint>
 
-enum PacketType
-{
-	fail = -1, err, ok, biz
-};
 class Payload;
 class MySQLPacket
 {
@@ -26,7 +22,7 @@ class MySQLPacket
 	MySQLPacket(Payload* payload);
  public:
 	void print();
-	void read(const std::vector<uint8_t>& buffer, std::function<void(void*)> const& fn);
+	void read(const std::vector<uint8_t>& buffer);
 	std::vector<uint8_t> write();
 };
 
