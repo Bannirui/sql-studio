@@ -23,8 +23,8 @@ class ParserUtil
 	template<typename T>
 	static T read_int_from_byte_arr(const std::vector<uint8_t>& buf, size_t& offset)
 	{
-		T val= *reinterpret_cast<const T*>(&buf[offset]);
-		offset+=sizeof(T);
+		T val = *reinterpret_cast<const T*>(&buf[offset]);
+		offset += sizeof(T);
 		return val;
 	}
 	// 小端存储
@@ -37,5 +37,9 @@ class ParserUtil
 	 * 连续读n个byte
 	 */
 	static std::vector<uint8_t> read_n_bytes(const std::vector<uint8_t>& buf, size_t& offset, int n);
+};
+class SHAUtil
+{
+	static std::string sha256(const std::string& str);
 };
 #endif //SQL_STUDIO__UTIL_H_

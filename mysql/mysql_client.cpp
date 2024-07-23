@@ -6,7 +6,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <iostream>
-#include <functional>
 #include <iomanip>
 
 #include "include/mysql_client.h"

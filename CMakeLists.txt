@@ -5,13 +5,30 @@ project(sql-studio VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 11)
 
 if (APPLE)
+    # qt
     set(CMAKE_PREFIX_PATH "/Users/dingrui/Qt/6.7.0/macos")
+    # openssl
+    set(OPENSSL_DIR "/usr/local/Cellar/openssl@3/3.3.1")
 endif ()
+
+# 查找Qt
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+# 查找OpenSSL
+find_package(OpenSSL REQUIRED)
 
 option(TEST_DEBUG "调试日志开关" OFF)
 
 if (TEST_DEBUG)
     add_definitions(-DTEST_DEBUG)
+endif ()
+
+# unit test
+option(UNIT_TEST "unit test" OFF)
+if (UNIT_TEST)
+    # 在项目的top level开启ctest
+    enable_testing()
+    add_subdirectory(tests)
 endif ()
 
 set(CMAKE_AUTOUIC ON)
@@ -20,13 +37,15 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-
 # 源码
 aux_source_directory(. PROJECT_SOURCES)
 # 头文件搜索路径
-include_directories(mysql/include)
+include_directories(
+        # 自定义的库
+        ${CMAKE_CURRENT_SOURCE_DIR}/mysql/include
+        # OpenSSL库的头文件路径
+        ${OPENSSL_DIR}/include
+)
 
 add_subdirectory(mysql)
 
@@ -80,9 +99,18 @@ if (QT_VERSION_MAJOR EQUAL 6)
 endif ()
 
 # 库文件路径
-target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/mysql/lib)
+target_link_directories(${PROJECT_NAME}
+        # 自定义的库文件
+        PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/mysql/lib
+        # OpenSSL库文件
+        PRIVATE ${OPENSSL_DIR}/lib
+)
 # 链接库
 target_link_libraries(${PROJECT_NAME}
+        # Qt
         PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+        # 自己编译的库文件
         PRIVATE mysql-client
+        # OpenSSl的库libssl.a
+        PRIVATE ssl
 )
