@@ -40,6 +40,15 @@ class ParserUtil
 };
 class SHAUtil
 {
-	static std::string sha256(const std::string& str);
+ public:
+	/**
+	 * 计算sha2散列值.
+	 * @param hash str的sha2散列值
+	 */
+	static bool sha256(const std::string data, uint8_t* hash);
+	/**
+	 * caching_sha_password算法计算缓存密码.
+	 */
+	static std::string caching_sha2_pwd(const std::string& pwd, const std::string& salt);
 };
 #endif //SQL_STUDIO__UTIL_H_

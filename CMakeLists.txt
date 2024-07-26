@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
+# 指定编译器 一定要写在project之前
+set(CMAKE_C_COMPILER "/usr/local/Cellar/gcc@12/12.3.0/bin/gcc-12")
+set(CMAKE_CXX_COMPILER "/usr/local/Cellar/gcc@12/12.3.0/bin/g++-12")
+
 project(sql-studio VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -8,7 +12,7 @@ if (APPLE)
     # qt
     set(CMAKE_PREFIX_PATH "/Users/dingrui/Qt/6.7.0/macos")
     # openssl
-    set(OPENSSL_DIR "/usr/local/Cellar/openssl@3/3.3.1")
+    set(OPENSSL_HOME "/usr/local/Cellar/openssl@3/3.3.0")
 endif ()
 
 # 查找Qt
@@ -44,7 +48,7 @@ include_directories(
         # 自定义的库
         ${CMAKE_CURRENT_SOURCE_DIR}/mysql/include
         # OpenSSL库的头文件路径
-        ${OPENSSL_DIR}/include
+        ${OPENSSL_HOME}/include
 )
 
 add_subdirectory(mysql)
@@ -103,7 +107,7 @@ target_link_directories(${PROJECT_NAME}
         # 自定义的库文件
         PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/mysql/lib
         # OpenSSL库文件
-        PRIVATE ${OPENSSL_DIR}/lib
+        PRIVATE ${OPENSSL_HOME}/lib
 )
 # 链接库
 target_link_libraries(${PROJECT_NAME}
@@ -113,4 +117,5 @@ target_link_libraries(${PROJECT_NAME}
         PRIVATE mysql-client
         # OpenSSl的库libssl.a
         PRIVATE ssl
+        PRIVATE crypto
 )
