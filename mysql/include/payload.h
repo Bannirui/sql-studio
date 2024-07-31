@@ -45,7 +45,8 @@ class HandshakeV9Payload : public HandshakePayload
 class HandshakeV10Payload : public HandshakePayload
 {
  public:
-	std::vector<uint8_t> auth_plugin_data_part1;
+	// first 8 bytes of the plugin provided data (scramble)
+	std::vector<uint8_t> auth_plugin_data_part_1;
 	uint8_t filler;
 	// The lower 2 bytes of the Capabilities Flags
 	uint16_t capability_flags_1;
@@ -53,8 +54,10 @@ class HandshakeV10Payload : public HandshakePayload
 	uint16_t status_flags;
 	// The upper 2 bytes of the Capabilities Flags
 	uint16_t capability_flags_2;
-	uint8_t auth_plugin_data_len;
 	std::vector<uint8_t> reserved;
+	// length of the combined auth_plugin_data (scramble), if auth_plugin_data_len is > 0
+	uint8_t auth_plugin_data_len;
+	// Rest of the plugin provided data (scramble), $len=MAX(13, length of auth-plugin-data - 8)
 	std::vector<uint8_t> auth_plugin_data_part_2;
 	std::string auth_plugin_name;
  public:

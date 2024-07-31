@@ -29,6 +29,7 @@ class ParserUtil
 	}
 	// 小端存储
 	static uint32_t read_u24_from_byte_arr(const std::vector<uint8_t>& buf, size_t& offset);
+	static void write_u24_to_byte_arr(std::vector<uint8_t>& buf, size_t& offset, uint32_t val);
 	/**
 	 * 从byte数组中读取以null结尾的字符串
 	 */
@@ -41,14 +42,6 @@ class ParserUtil
 class SHAUtil
 {
  public:
-	/**
-	 * 计算sha2散列值.
-	 * @param hash str的sha2散列值
-	 */
-	static bool sha256(const std::string data, uint8_t* hash);
-	/**
-	 * caching_sha_password算法计算缓存密码.
-	 */
-	static std::string caching_sha2_pwd(const std::string& pwd, const std::string& salt);
+	static std::vector<uint8_t> scramble(std::vector<uint8_t> nonce, const std::string password);
 };
 #endif //SQL_STUDIO__UTIL_H_
