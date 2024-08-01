@@ -22,8 +22,7 @@ void ParserUtil::write_u24_to_byte_arr(std::vector<uint8_t>& buf, size_t& offset
 {
 	for (int i = 0; i < 3; i++)
 	{
-		buf.at(offset++) = val & 0xff;
-		val >>= 8;
+		buf.at(offset++) = (val >> (i * 8)) & 0xff;
 	}
 }
 std::string ParserUtil::read_string_till_terminate(const std::vector<uint8_t>& buf, size_t& offset)

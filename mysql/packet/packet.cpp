@@ -35,5 +35,8 @@ std::vector<uint8_t> MySQLPacket::write()
 	packet.push_back(this->sequence_id & 0xff);
 	std::vector<uint8_t> payload_bytes = this->payload->write();
 	packet.insert(packet.end(), payload_bytes.begin(), payload_bytes.end());
+	// 协议包的前3个字节是包大小 在写完整个协议包之后进行修正
+	size_t i = 0;
+	ParserUtil::write_u24_to_byte_arr(packet, i, packet.size());
 	return packet;
 }
